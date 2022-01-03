@@ -67,11 +67,10 @@ export class TemplateLayerPF extends TemplateLayer {
       preview.data.direction = Math.normalizeDegrees(Math.toDegrees(ray.angle));
     }
     // Set distance
-	//Try just using x-x and y-y
     if (["cone", "circle", "ray"].includes(type)) {
-      preview.data.distance = Math.floor((Math.abs(destination.x - origin.x) + (Math.abs(destination.y - origin.y)) / ratio / dist) * dist;
+      preview.data.distance = Math.floor(ray.distance / ratio / dist) * dist;
     } else {
-      preview.data.distance = (Math.abs(destination.x - origin.x) + (Math.abs(destination.y - origin.y)) / ratio;
+      preview.data.distance = ray.distance / ratio;
     }
     preview.refresh();
 
@@ -131,8 +130,8 @@ export class MeasuredTemplatePF extends MeasuredTemplate {
       const nDiagonal = Math.min(nx, ny),
         nStraight = Math.abs(ny - nx);
 
-      // Ignore diagonals
-      const distance = nx + ny;
+      // Diagonals in PF pretty much count as 1.5 times a straight
+      const distance = Math.floor(nDiagonal * 1.5 + nStraight);
       const distanceOnGrid = distance * canvas.dimensions.distance;
       return distanceOnGrid;
     };
